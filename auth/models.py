@@ -1,8 +1,8 @@
 from datetime import datetime
+from uuid import UUID
 
-from sqlalchemy import String, Column, Boolean, TIMESTAMP, UUID
-
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import TIMESTAMP
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
@@ -12,11 +12,11 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(UUID, primary_key=True)
-    email = Column(String, nullable=False)
-    password = Column(String, nullable=False)
-    disabled = Column(Boolean, nullable=False, default=False)
-    registered = Column(TIMESTAMP, nullable=False, default=datetime.utcnow)
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(nullable=False)
+    password: Mapped[str] = mapped_column(nullable=False)
+    disabled: Mapped[bool] = mapped_column(nullable=False, default=False)
+    registered: Mapped[datetime] = mapped_column(TIMESTAMP, nullable=False, default=datetime.utcnow)
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
